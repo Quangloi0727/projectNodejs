@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%- title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+
+</head>
+
+<body>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Username</th>
+                <th scope="col">Password</th>
+                <th scope="col">Email</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+                listUsers.forEach(function(el,index){ %>
+                    <tr>
+                        <th scope="row"><%- index + 1 %></th>
+                        <td><%- el.username %></td>
+                        <td><%- el.password %></td>
+                        <td><%- el.email %></td>
+                        <td>
+                            <button><i class="zmdi zmdi-delete" data-id="<%- el._id %>"></i></button>
+                            <button><i class="zmdi zmdi-edit" data-id="<%- el._id %>"></i></button>
+                        </td>
+                    </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+
+<script>
+    var socket = io("http://localhost:6288")
+    // click vào nút sửa
+    $(document).on('click', '.zmdi-edit', function () {
+        let _id = $(this).attr('data-id')
+        socket.emit("ChangeUser", _id)
+    });
+
+    socket.on("ChangeDone", function (data) {
+        alert(data);
+        window.location.reload();
+    })
+
+</script>
+
+</html>
